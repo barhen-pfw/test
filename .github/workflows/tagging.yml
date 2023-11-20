@@ -1,0 +1,25 @@
+name: Assign Needs Assignment Label
+
+on:
+  issues:
+    types:
+      - opened
+
+jobs:
+  assign-label:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Add Needs Assignment Label
+        run: |
+          ISSUE_NUMBER=$(jq --raw-output .issue.number "$GITHUB_EVENT_PATH")
+          echo "Adding 'needs assignment' label to issue #$ISSUE_NUMBER"
+          curl -X POST \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            "https://api.github.com/repos/${{ github.repository }}/issues/$ISSUE_NUMBER/labels" \
+            -d '["needs assignment"]'
+

@@ -15,7 +15,7 @@ jobs:
 
       - name: Add Needs Assignment Label
         run: |
-          ISSUE_NUMBER= 1
+          ISSUE_NUMBER= ISSUE_NUMBER=$(jq --raw-output .issue.number "$GITHUB_EVENT_PATH")
           echo "Adding 'needs assignment' label to issue #$ISSUE_NUMBER"
           curl -X POST \
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
